@@ -1,6 +1,6 @@
 # A D3 rally
 
-This is a roundup of material about D3 that I assembled while learning it and it serves the purpose of the reference point for code examples when creating some viz. 
+This is a roundup of material about D3 that I assembled while learning it and it serves the purpose of the reference point for code examples when creating some viz. There is a number to each HTML file indicating the logical order in which I've followed the learning.
 
 ## Materials used
 

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Putting data elements in the SVG container</title>
+    <script type="text/javascript" src="d3_source/4.11.0/d3.min.js"></script>
+  </head>
+
+  <body>
+
+  </body>
+
+    <script>
+
+      // SVG container with border
+      var svgContainer = d3.select("body")
+                          .append("svg")
+                          .attr("width", 200)
+                          .attr("height", 200)
+                          .style("border", "1px solid black");
+
+      // Radii for circles and circles in the container
+      var circleRadii = [40, 20, 10];
+
+      var circles = svgContainer.selectAll("circle")
+                      .data(circleRadii)
+                      .enter()
+                      .append("circle");
+
+      var circleAttributes = circles.attr("cx", 100)
+                              .attr("cy", 150)
+                              .attr("r", function (d) { return d; })
+                              .style("fill",
+                                function(d) {
+                                  var returnColor;
+                                  if (d === 40) {
+                                    returnColor = "green";
+                                  } else if (d === 20) {
+                                    returnColor = "purple";
+                                  } else if (d === 10) {
+                                    returnColor = "red"; }
+                                  return returnColor;
+                              });
+
+      // Another SVG container with red border
+      var svgContainer = d3.select("body")
+                          .append("svg")
+                          .attr("width", 200)
+                          .attr("height", 200)
+                          .style("border", "2px solid red");
+
+
+      // Three black circles in different locations
+      var CirclesCoords = [30, 70, 110];
+
+      var circles = svgContainer.selectAll("circle")
+                                .data(CirclesCoords)
+                                .enter()
+                                .append("circle");
+
+      var circleAttributes = circles
+                             .attr("cx", function (d) { return d; })
+                             .attr("cy", function (d) { return d; })
+                             .attr("r", 20 );
+
+      // A third SVG container, no border
+      var svgContainer = d3.select("body")
+                            .append("svg")
+                            .attr("width", 200)
+                            .attr("height", 200);
+
+      // Three circles in different places and different colours
+      var CirclesCoords = [30, 70, 110];
+
+      var circles = svgContainer.selectAll("circle")
+                          .data(CirclesCoords)
+                          .enter()
+                          .append("circle");
+
+      var circleAttributes = circles
+                       .attr("cx", function (d) { return d; })
+                       .attr("cy", function (d) { return d; })
+                       .attr("r", 20 )
+                       .style("fill", function(d) {
+                          var returnColor;
+                          if (d === 30) {
+                            returnColor = "green";
+                          } else if (d === 70) {
+                            returnColor = "purple";
+                          } else if (d === 110) {
+                            returnColor = "red"; }
+                          return returnColor;
+                        });
+
+    </script>
+
+</html>

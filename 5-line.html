@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>A line</title>
+    <script type="text/javascript" src="d3_source/4.11.0/d3.min.js"></script>
+  </head>
+
+  <body>
+
+  </body>
+
+  <script>
+
+    // The SVG container
+    var svgContainer = d3.select("body").append("svg")
+                                 .attr("width", 200)
+                                 .attr("height", 200);
+
+    //Draw the line
+    var line = svgContainer.append("line")
+                     .attr("x1", 5)
+                     .attr("y1", 5)
+                     .attr("x2", 50)
+                     .attr("y2", 50)
+                     .attr("stroke-width", 2)
+                     .attr("stroke", "black");
+
+  </script>
+
+</html>

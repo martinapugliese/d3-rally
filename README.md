@@ -42,6 +42,14 @@ D3 is open source and [on Github](). When writing this, we used the current rele
     <script src="https://d3js.org/d3.v4.min.js"></script>
     ```
 
-### Using D3 - memento
+### Using D3 code in HTML- memento
 
 * always put the meta tag in the head as `<meta charset="utf-8">`, as this ensures browser parses D3 right
+
+### Starting a webserver locally
+
+The best way to see the work going is through a local webserver where code is served from your machine. Can start it quickly with Python, for Python3 run
+
+```py
+python3 -m http.server
+```

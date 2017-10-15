@@ -10,7 +10,7 @@
    <style type="text/css">
 
         body.circle {
-            fill: "#08b8e1";
+            fill: lightsteelblue;
         }
 
         div.tooltip {
@@ -82,8 +82,8 @@
                   div.html(d.t + ",   " + d.b)
                      // .style("left", (d3.event.pageX) + "px")
                      // .style("top", (d3.event.pageY - 28) + "px")
-                     .style("left", (padding + myScaleX(d.n_prods)) + "px")
-                     .style("top", (myScaleY(d.n_swipes)) + "px")
+                     .style("left", (padding + myScaleX(d.c)) + "px")
+                     .style("top", (myScaleY(d.a)) + "px")
             })
             .on("mouseout", function(d) {
                    div.transition()
@@ -91,23 +91,6 @@
                      .style("opacity", 0);
             })
             ;
-
-          // svg.selectAll("text")
-          //    .data(dataset)
-          //    .enter()
-          //    .append("text")
-          //    .text(function(d) {
-          //         return d.month + d.n_prods;
-          //     })
-          //    .attr("x", function(d) {
-          //         return padding + myScaleX(d.n_prods);
-          //     })
-          //     .attr("y", function(d) {
-          //         return myScaleY(d.n_swipes);
-          //     })
-          //     .attr("font-family", "sans-serif")
-          //     .attr("font-size", "11px")
-          //     .attr("fill", "red");
 
           svg.append("g")
               .attr("transform", "translate(0" + padding +  "," + (h) + ")")

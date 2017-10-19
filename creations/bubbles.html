@@ -34,6 +34,10 @@
 
     <script>
 
+      // TODOS
+      // 1. Fix scale and limits
+
+
       // Create a SVG container
       var w = 1000;
       var w1 = 1500;
@@ -120,7 +124,7 @@
 
 
       // Load the CSV data and draw each bubble
-      d3.csv("bubbles.csv", function(data) {
+      d3.csv("../data/bubbles.csv", function(data) {
         dataset = data;
         console.log(data);
         drawBubbles(svg, dataset);

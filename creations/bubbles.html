@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Bubbles</title>
+    <script type="text/javascript" src="../d3_source/4.11.0/d3.min.js"></script>
+
+   <style type="text/css">
+
+        body.circle {
+            fill: lightsteelblue;
+        }
+
+        div.tooltip {
+          position: absolute;
+          text-align: center;
+          width: 100px;
+          height: 15px;
+          padding: 2px;
+          font: 12px sans-serif;
+          background: lightsteelblue;
+          border: 0px;
+          border-radius: 8px;
+          pointer-events: none;
+        }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <script>
+
+      // TODOS
+      // 1. Fix scale and limits
+
+
+      // Create a SVG container
+      var w = 1000;
+      var w1 = 1500;
+      var h1 = 600;
+      var h = 500;
+      var padding = 100;
+      var svg = d3.select("body")
+                  .append("svg")
+                  .attr("width", w1)
+                  .attr("height", h1);
+
+      // A linear scale
+      var myScaleX = d3.scaleLinear();
+      myScaleX.domain([0, 1000])
+             .range([0, w]);
+
+      var myScaleY = d3.scaleLinear();
+      myScaleY.domain([0, 10000])
+              .range([h, 0]);
+
+      var div = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
+      function drawBubbles(svg, dataset) {
+
+        svg.selectAll("circle")
+           .data(dataset)
+           .enter()
+           .append("circle")
+           .attr("cx", function(d) {
+                return padding + myScaleX(d.a);
+            })
+            .attr("cy", function(d) {
+                return myScaleY(d.c);
+            })
+            .attr("r", function(d) {
+                return d.b * 20;
+            })
+            .style("fill", "#08b8e1")
+            .on("mouseover", function(d) {
+                  div.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+
+                  div.html(d.t + ",   " + d.b)
+                     // .style("left", (d3.event.pageX) + "px")
+                     // .style("top", (d3.event.pageY - 28) + "px")
+                     .style("left", (padding + myScaleX(d.c)) + "px")
+                     .style("top", (myScaleY(d.a)) + "px")
+            })
+            .on("mouseout", function(d) {
+                   div.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+            })
+            ;
+
+          svg.append("g")
+              .attr("transform", "translate(0" + padding +  "," + (h) + ")")
+              .call(d3.axisBottom()
+                      .scale(myScaleX));
+
+          svg.append("text")
+              .attr("transform",
+                    "translate(" + (padding + 500) + " ," + (h + 50) + ")")
+              .style("text-anchor", "middle")
+              .text("A");
+
+          svg.append("g")
+              .attr("transform", "translate(" + padding + ",0)")
+              .call(d3.axisLeft()
+                      .scale(myScaleY));
+
+          svg.append("text")
+              .attr("transform", "rotate(-90)")
+              //.attr("y", myScaleY(h/2))
+              .attr("x", myScaleX(-500))
+              .attr("dy", "1em")
+              .style("text-anchor", "middle")
+              .text("B");
+
+      };
+
+
+      // Load the CSV data and draw each bubble
+      d3.csv("../data/bubbles.csv", function(data) {
+        dataset = data;
+        console.log(data);
+        drawBubbles(svg, dataset);
+      });
+
+    </script>
+
+</body>
+
+</html>

@@ -7,24 +7,24 @@
     <title>Bubbles</title>
     <script type="text/javascript" src="../d3_source/4.11.0/d3.min.js"></script>
 
-   <style type="text/css">
+     <style type="text/css">
 
-        body.circle {
-            fill: lightsteelblue;
-        }
+          body.circle {
+              fill: lightsteelblue;
+          }
 
-        div.tooltip {
-          position: absolute;
-          text-align: center;
-          width: 100px;
-          height: 15px;
-          padding: 2px;
-          font: 12px sans-serif;
-          background: lightsteelblue;
-          border: 0px;
-          border-radius: 8px;
-          pointer-events: none;
-        }
+          div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 100px;
+            height: 15px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+          }
 
     </style>
 
@@ -37,97 +37,112 @@
       // TODOS
       // 1. Fix scale and limits
 
-
-      // Create a SVG container
+      // Create a SVG container (1000 + padding)X(500 + padding)
       var w = 1000;
-      var w1 = 1500;
-      var h1 = 600;
+      //var w1 = 1500;
+      //var h1 = 600;
       var h = 500;
       var padding = 100;
+
       var svg = d3.select("body")
                   .append("svg")
-                  .attr("width", w1)
-                  .attr("height", h1);
+                  .attr("width", w + padding)
+                  .attr("height", h + padding);
 
-      // A linear scale
-      var myScaleX = d3.scaleLinear();
-      myScaleX.domain([0, 1000])
-             .range([0, w]);
-
-      var myScaleY = d3.scaleLinear();
-      myScaleY.domain([0, 10000])
-              .range([h, 0]);
-
+      // Create the tooltip DIVs
       var div = d3.select("body").append("div")
           .attr("class", "tooltip")
           .style("opacity", 0);
 
-      function drawBubbles(svg, dataset) {
+      // Function to draw the bubbles
+      function drawBubbles(svg, myScaleX, myScaleY, dataset) {
 
         svg.selectAll("circle")
            .data(dataset)
            .enter()
            .append("circle")
            .attr("cx", function(d) {
-                return padding + myScaleX(d.a);
+                return myScaleX(d.x + padding/2);
             })
             .attr("cy", function(d) {
-                return myScaleY(d.c);
+                return myScaleY(d.y + padding);
             })
             .attr("r", function(d) {
-                return d.b * 20;
+                return d.size * 20;
             })
             .style("fill", "#08b8e1")
             .on("mouseover", function(d) {
                   div.transition()
                      .duration(200)
                      .style("opacity", .9);
-
-                  div.html(d.t + ",   " + d.b)
-                     // .style("left", (d3.event.pageX) + "px")
-                     // .style("top", (d3.event.pageY - 28) + "px")
-                     .style("left", (padding + myScaleX(d.c)) + "px")
-                     .style("top", (myScaleY(d.a)) + "px")
+                  div.html(d.x + ",   " + d.y + ",   " + d.size)
+                     .style("left", (padding + myScaleX(d.t)) + "px")
+                     .style("top", (myScaleY(d.x)) + "px")
             })
             .on("mouseout", function(d) {
                    div.transition()
                      .duration(500)
                      .style("opacity", 0);
-            })
-            ;
-
-          svg.append("g")
-              .attr("transform", "translate(0" + padding +  "," + (h) + ")")
-              .call(d3.axisBottom()
-                      .scale(myScaleX));
-
-          svg.append("text")
-              .attr("transform",
-                    "translate(" + (padding + 500) + " ," + (h + 50) + ")")
-              .style("text-anchor", "middle")
-              .text("A");
-
-          svg.append("g")
-              .attr("transform", "translate(" + padding + ",0)")
-              .call(d3.axisLeft()
-                      .scale(myScaleY));
-
-          svg.append("text")
-              .attr("transform", "rotate(-90)")
-              //.attr("y", myScaleY(h/2))
-              .attr("x", myScaleX(-500))
-              .attr("dy", "1em")
-              .style("text-anchor", "middle")
-              .text("B");
+            });
 
       };
 
 
       // Load the CSV data and draw each bubble
       d3.csv("../data/bubbles.csv", function(data) {
-        dataset = data;
-        console.log(data);
-        drawBubbles(svg, dataset);
+
+        // Casting types of x and y to int
+        data.forEach(function(d) {
+          d.x = +d.x;
+          d.y = +d.y;
+        });
+
+        // Find max in x and y
+        var maxX = d3.max(data, function(d) {
+          return d.x;
+        });
+        var maxY = d3.max(data, function(d) {
+          return d.y;
+        });
+
+        // Create linear scales
+        var myScaleX = d3.scaleLinear();
+        myScaleX.domain([0, maxX])
+                .range([0, w]);
+
+        var myScaleY = d3.scaleLinear();
+        myScaleY.domain([0, maxY])
+                .range([h, 0]);
+
+        // Draw the bubbles
+        drawBubbles(svg, myScaleX, myScaleY, data);
+
+        // Draw the X axis
+        svg.append("g")
+            .attr("transform", "translate(0" + padding/2 +  "," + (h) + ")")
+            .call(d3.axisBottom()
+                    .scale(myScaleX));
+
+        // Draw the Y axis
+        svg.append("g")
+            .attr("transform", "translate(" + padding/2 + ",0)")
+            .call(d3.axisLeft()
+                    .scale(myScaleY));
+
+        // Labels to axes
+        svg.append("text")
+            .attr("transform",
+                  "translate(" + (padding/2 + w/2) + " ," + (h + padding/2) + ")")
+            .style("text-anchor", "middle")
+            .text("X");
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", myScaleX(-w/2 + h/2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Y");
+
       });
 
     </script>
